@@ -1,0 +1,101 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans 'Products' %}</title>
+    <style>
+     .at_right { position: absolute; top: -20px; right: 150px }
+    </style>
+</head>
+<body style="margin: auto; width: 90%">
+<header>
+    <form class="at_right" style="top: 15px; right: 20%" action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input name="next" type="hidden" value="{{ redirect_to }}">
+            <select name="language">
+                {% get_current_language as LANGUAGE_CODE %}
+                {% get_available_languages as LANGUAGES %}
+                {% get_language_info_list for LANGUAGES as languages %}
+                {% for language in languages %}
+                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %} selected {% endif %}>
+                    {{ language.name_local }} ({{ language.code }})
+                </option>
+                {% endfor %}
+            </select>
+        <input type="submit" value="OK">
+    </form>
+</header>
+{% if request.user.is_authenticated %}
+    <p>
+        {% trans 'Welcome' %}, {{ request.user.username }} (<a href="{% url 'account' %}">{% trans 'Your profile' %}</a>)
+        <a href="{% url 'logout' %}" style="margin-left: 100px">{% trans 'Logout' %}</a>
+        <a href="{% url 'cart' %}" style="margin-left: 100px">{% trans 'Cart' %}</a>
+        {% if cart_sum %}
+            ({% trans 'Total' %}: {{ cart_sum }} {% trans "rub." %})
+        {% endif %}
+    </p>
+{% else %}
+    <p>
+        <a href="{% url 'login' %}" style="margin-left: 20px">{% trans 'Login' %}</a>
+        <a href="{% url 'register' %}" style="margin-left: 180px">{% trans 'Register' %}</a>
+    </p>
+{% endif %}
+{% if page_obj %}
+<h2>{% trans 'Products' %}</h2>
+<ul>
+{% for product in page_obj %}
+<li>
+    <div>{{ product.name }} ({{ product.shop.name }})</div>
+    <div style="position:relative">
+        <div class="at_right" style="left:300px">{% trans 'In stock'%}: {{ product.remains }}</div>
+        <div class="at_right" style="left:450px">
+        {% if request.user.is_authenticated %}
+            {% if product.id in cart_products_ids %}
+                {% for cart_line in cart %}
+                    {% if cart_line.product.id == product.id %}
+                        <span style="color: RGB(11, 112, 0)">
+                            {{ cart_line.line_total }} {% trans 'rub.' %}, {{ cart_line.quantity }} {% trans 'pcs.' %}
+                        </span>
+                    {% endif %}
+                {% endfor %}
+                <form action="?page={{ page_obj.number }}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="minus" value="{{ product.id }}"> - </button>
+                    <button type="submit" name="plus" value="{{ product.id }}"> + </button>
+                </form>
+            {% else %}
+            {{ product.price }} {% trans 'rub.' %}
+            <form action="?page={{ page_obj.number }}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="plus" value="{{ product.id }}">{% trans 'Add to cart' %}</button>
+            </form>
+            {% endif %}
+        {% else %}
+            {{ product.price }} {% trans 'rub.' %}
+        {% endif %}
+        </div>
+    </div>
+    <p>{{ product.description_100char }}</p>
+    <hr>
+</li>
+{% endfor %}
+</ul>
+<div style="margin: auto; width: 50%">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+    {% endif %}
+    <span>
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+    {% endif %}
+</div>
+{% else %}
+    <h2>{% trans "No products" %}</h2>
+{% endif %}
+</body>
+</html>

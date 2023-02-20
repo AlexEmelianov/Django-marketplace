@@ -1,0 +1,59 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Account" %}</title>
+</head>
+<body>
+    <p>
+        <a href="/" style="margin-left: 300px;">{% trans 'To the main' %}</a>
+        <a href="{% url 'cart' %}" style="margin-left: 100px;">{% trans 'Cart' %}</a>
+        {% if cart_sum %}
+            ({% trans 'Total' %}: {{ cart_sum }} {% trans "rub." %})
+        {% endif %}
+        {% if profile.is_superuser %}
+           <a href="{% url 'report' %}" style="margin-left: 100px;">{% trans 'Report' %}</a>
+        {% endif %}
+    </p>
+    <h2>{% trans "Personal information" %}</h2>
+    <p>{% trans "User name" %}: {{ profile.username }}</p>
+    <p>
+        {% trans "Status" %}: {{ profile.status }}
+        ({% trans "Total amount of orders" %}: {{ total }} {% trans "rub." %})
+    </p>
+    <form action="{% url 'replenish' %}">
+        <span>{% trans "Balance" %}: {{ profile.balance }} {% trans "rub." %}</span>
+        <button type="submit" style="margin-left: 50px">{% trans "Replenish" %}</button>
+    </form>
+    <p>{% trans "City" %}: {{ profile.city }}</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{% trans "Save and back" %}</button>
+    </form>
+    <h3 style="margin-top: 50px">{% trans "Orders" %}</h3>
+    {% if orders %}
+        <ul>
+        {% for order in orders %}
+            <li>{% trans "Order ID" %}: {{ order.id }}</li>
+            <br>
+            <ol>
+            {% for order_line in order.order_lines %}
+                <li>{{ order_line.product.name }},
+                    {{ order_line.quantity }}  {% trans 'pcs.' %},
+                    {% trans "price" %}: {{ order_line.line_total }} {% trans "rub." %},
+                    {% trans "shop" %}: {{ order_line.product.shop.name }}
+                </li>
+            {% endfor %}
+            </ol>
+            <p>{% trans "Total" %}: {{ order.total }} {% trans "rub." %}</p>
+            <p>{% trans "Purchase date" %}: {{ order.purchase_date }}</p>
+            <hr>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>{% trans "There is nothing yet" %}</p>
+    {% endif %}
+</body>
+</html>

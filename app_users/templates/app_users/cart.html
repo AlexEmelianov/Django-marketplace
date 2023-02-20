@@ -1,0 +1,61 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans 'Cart' %}</title>
+    <style>
+     .at_right { position: absolute; top: 0px; right: 150px }
+    </style>
+</head>
+<body>
+<p>
+    <a href="/" style="margin-left: 300px;">{% trans 'To the main' %}</a>
+    <a href="{% url 'account' %}" style="margin-left: 100px;">{% trans 'Your profile' %}</a>
+</p>
+<h2>{% trans 'Cart' %}</h2>
+{% if cart %}
+    <ul>
+    {% for cart_line in cart %}
+    <li>
+        <p>{{ cart_line.product.name }} ({{ cart_line.product.shop.name }})</p>
+        <div style="position:relative; top:-35px">
+            <div class="at_right" style="left:300px">{% trans 'In stock' %}: {{ cart_line.product.remains }}</div>
+            <div class="at_right" style="left:450px">
+                {{ cart_line.line_total }} {% trans "rub." %}, {{ cart_line.quantity}} {% trans "pcs." %}
+                <form action="." method="post" class="at_right" style="left:200px">
+                    {% csrf_token %}
+                    <button type="submit" name="minus" value="{{ cart_line.product.id }}"> - </button>
+                    <button type="submit" name="plus" value="{{ cart_line.product.id }}"> + </button>
+                    <button type="submit" name="delete" value="{{ cart_line.product.id }}"> {% trans 'Delete' %} </button>
+                </form>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+    </ul>
+    <br>
+    <div style="position: relative">
+        <div class="at_right" style="left:450px">
+            {% trans "Total" %}: {{ cart_sum }}  {% trans "rub." %}
+        </div>
+        {% if cart_sum %}
+            <form action="." method="post" class="at_right" style="left:450px; top:50px">
+                {% csrf_token %}
+                <button type="submit" name="to_pay">{% trans 'To pay' %}</button>
+            </form>
+        {% endif %}
+    </div>
+{% else %}
+    <br>
+    <p>{% trans 'Cart is empty' %}</p>
+{% endif%}
+<div style="position:relative">
+    <h3>
+    {% if message %}
+        {{ message|linebreaks }}
+    {% endif %}
+    </h3>
+</div>
+</body>
+</html>

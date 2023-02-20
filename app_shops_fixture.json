@@ -1,0 +1,188 @@
+[
+{
+    "model": "app_shops.shop",
+    "pk": 1,
+    "fields": {
+        "name": "\"Nice dishes\" Shop",
+        "description": "Description for \"Nice dishes\" Shop"
+    }
+},
+{
+    "model": "app_shops.shop",
+    "pk": 2,
+    "fields": {
+        "name": "\"Electronic devices\" Shop",
+        "description": "Description for \"Electronic devices\" Shop"
+    }
+},
+{
+    "model": "app_shops.shop",
+    "pk": 3,
+    "fields": {
+        "name": "\"Presents and Souvenirs\" Shop",
+        "description": "Description for \"Presents and Souvenirs\" Shop"
+    }
+},
+{
+    "model": "app_shops.shop",
+    "pk": 4,
+    "fields": {
+        "name": "\"Furniture 4U\" Shop",
+        "description": "Description for \"Furniture 4U\" Shop"
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 1,
+    "fields": {
+        "name": "Spoon",
+        "description": "some description for spoon",
+        "price": "100.50",
+        "remains": 58,
+        "shop": 1
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 2,
+    "fields": {
+        "name": "Fork",
+        "description": "some description for fork",
+        "price": "100.00",
+        "remains": 46,
+        "shop": 1
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 3,
+    "fields": {
+        "name": "Laptop",
+        "description": "some description for laptop",
+        "price": "40000.00",
+        "remains": 3,
+        "shop": 2
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 4,
+    "fields": {
+        "name": "Tablet",
+        "description": "some description for tablet",
+        "price": "8000.00",
+        "remains": 5,
+        "shop": 2
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 5,
+    "fields": {
+        "name": "Poster",
+        "description": "some description for poster",
+        "price": "20.10",
+        "remains": 15,
+        "shop": 3
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 6,
+    "fields": {
+        "name": "Chair",
+        "description": "some description for chair",
+        "price": "800.00",
+        "remains": 9,
+        "shop": 4
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 7,
+    "fields": {
+        "name": "Smartphone",
+        "description": "some description for smartphone",
+        "price": "20000.00",
+        "remains": 26,
+        "shop": 2
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 8,
+    "fields": {
+        "name": "Soft toy",
+        "description": "some description for toy",
+        "price": "300.00",
+        "remains": 117,
+        "shop": 3
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 9,
+    "fields": {
+        "name": "Baloon",
+        "description": "some description for baloon",
+        "price": "200.00",
+        "remains": 218,
+        "shop": 3
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 10,
+    "fields": {
+        "name": "Plate",
+        "description": "some description for plate",
+        "price": "199.00",
+        "remains": 29,
+        "shop": 1
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 11,
+    "fields": {
+        "name": "Table",
+        "description": "some description for table",
+        "price": "2499.00",
+        "remains": 19,
+        "shop": 4
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 12,
+    "fields": {
+        "name": "Lamp",
+        "description": "some description for lamp",
+        "price": "999.00",
+        "remains": 34,
+        "shop": 4
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 13,
+    "fields": {
+        "name": "Bedside table",
+        "description": "some description for bedside table",
+        "price": "2699.00",
+        "remains": 11,
+        "shop": 4
+    }
+},
+{
+    "model": "app_shops.product",
+    "pk": 14,
+    "fields": {
+        "name": "Clothes hanger",
+        "description": "some description for bedside table clothes hanger",
+        "price": "659.00",
+        "remains": 40,
+        "shop": 4
+    }
+}
+]
