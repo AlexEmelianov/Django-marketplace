@@ -1,6 +1,7 @@
 from datetime import date
 from django.core.cache import cache
 from django.core.paginator import Paginator
+from django.http import HttpRequest, HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
 from django.core.exceptions import PermissionDenied
@@ -14,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def products_view(request):
+def products_view(request: HttpRequest) -> HttpResponse:
     """ Представление главной страницы со списком товаров """
 
     if request.method == 'POST':
@@ -29,7 +30,10 @@ def products_view(request):
     cart_products_ids = tuple(cart_line.product.id for cart_line in cart)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
     # Вечный кэш товаров и магазинов. Сбрасывается по сигналам изменения.
-    products = cache.get_or_set(PRODUCTS_SHOPS_KEY, ProductDAO.fetch_remains, timeout=None)
+    products = cache.get(PRODUCTS_SHOPS_KEY)
+    if products is None:
+        products = ProductDAO.fetch_remains()
+        cache.set(PRODUCTS_SHOPS_KEY, products, timeout=None)
 
     paginator = Paginator(products, 8)
     page_number = request.GET.get('page')
@@ -40,7 +44,7 @@ def products_view(request):
                                                             'page_obj': page_obj})
 
 
-def report_view(request):
+def report_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы отображения отчёта продаж """
 
     if request.user.username != 'admin':

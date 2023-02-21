@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.translation import gettext as _
 from services.payment_service import CartDAO, PaymentService
@@ -13,7 +14,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def login_view(request):
+def login_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы входа """
 
     if request.method == 'POST':
@@ -22,30 +23,24 @@ def login_view(request):
             username = auth_form.cleaned_data['username']
             password = auth_form.cleaned_data['password']
             user = authenticate(username=username, password=password)
-            if user:
-                if user.is_superuser:
-                    auth_form.add_error('__all__', _('Admin, you need to login through /admin/'))
-                elif not user.is_active:
-                    auth_form.add_error('__all__', _('Error! User is not active.'))
-                else:
-                    login(request, user)
-                    logger.debug(f'Authentification of the user {username!r}')
-                    return redirect('/')
-            else:
+            if user is None:
                 auth_form.add_error('__all__', _('Error! Check the spelling of the username and password.'))
+            elif user.is_superuser:
+                auth_form.add_error('__all__', _('Admin, you need to login through /admin/'))
+            elif not user.is_active:
+                auth_form.add_error('__all__', _('Error! User is not active.'))
+            else:
+                login(request, user)
+                logger.debug(f'Authentification of the user {username!r}')
+                return redirect('/')
     else:
+        if request.user.is_authenticated:
+            return redirect('/')
         auth_form = AuthForm()
     return render(request, 'app_users/login.html', {'form': auth_form})
 
 
-def logout_view(request):
-    """ Представление страницы выхода """
-
-    logout(request)
-    return redirect('/')
-
-
-def register_view(request):
+def register_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы регистрации """
 
     if request.method == 'POST':
@@ -64,7 +59,7 @@ def register_view(request):
     return render(request, 'app_users/register.html', {'form': form})
 
 
-def account_view(request):
+def account_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы личного кабинета """
 
     profile = ProfileDAO.fetch_one(user_id=request.user.id)
@@ -77,13 +72,11 @@ def account_view(request):
             return redirect('/')
     else:
         form = NamesEditForm(instance=request.user)
-
     # Вечный кэш для истории заказов. Сбрасывается по сигналам изменения.
     orders = cache.get(f'orders_{profile.username}')
     if orders is None:
         orders = OrderDAO.fetch(user_id=profile.id)
         cache.set(f'orders_{profile.username}', orders, timeout=None)
-
     total = sum(order.total for order in orders)
     cart = CartDAO.fetch(user_id=profile.id, threshold_quantity=1)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
@@ -94,7 +87,7 @@ def account_view(request):
                                                       'cart_sum': cart_sum})
 
 
-def replenish_view(request):
+def replenish_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы пополнения баланса """
 
     if not request.user.is_authenticated:
@@ -109,7 +102,7 @@ def replenish_view(request):
     return render(request, 'app_users/replenish.html', {'form': form})
 
 
-def cart_view(request):
+def cart_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы корзины """
 
     if not request.user.is_authenticated:

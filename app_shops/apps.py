@@ -3,7 +3,7 @@ from django.db.models.signals import post_save, post_delete
 
 
 class AppShopsConfig(AppConfig):
-    default_auto_field = 'django.db.models.AutoField'
+    default_auto_field = 'django.db.models.BigAutoField'
     name = 'app_shops'
 
     def ready(self):

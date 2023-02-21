@@ -100,7 +100,13 @@ class ProfileDAO:
 
         profile_orm = Profile.objects.get(user_id=profile.id)
         for field in update_fields:
-            setattr(profile_orm, field, getattr(profile, field))
+            if field == 'status':
+                for idx in range(3):
+                    if profile.status == profile.status_choices[idx][1]:
+                        profile_orm.status = profile.status_choices[idx][0]
+                        break
+            else:
+                setattr(profile_orm, field, getattr(profile, field))
         profile_orm.save(update_fields=update_fields)
 
 

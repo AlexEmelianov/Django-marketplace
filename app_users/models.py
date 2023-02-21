@@ -23,7 +23,6 @@ class Profile(m.Model):
 
 
 class Cart(m.Model):
-    id = m.AutoField(primary_key=True)
     user = m.ForeignKey(User, on_delete=m.CASCADE)
     product = m.ForeignKey(Product, on_delete=m.DO_NOTHING, verbose_name=_('product'))
     quantity = m.PositiveSmallIntegerField(default=1, verbose_name=_('quantity'))
@@ -42,7 +41,6 @@ class Cart(m.Model):
 
 
 class OrderLine(m.Model):
-    id = m.AutoField(primary_key=True)
     product = m.ForeignKey(Product, on_delete=m.DO_NOTHING, verbose_name=_('product'))
     purchase_price = m.DecimalField(max_digits=9, decimal_places=2, verbose_name=_('purchase price'))
     quantity = m.PositiveSmallIntegerField(verbose_name=_('quantity'))
@@ -55,12 +53,13 @@ class OrderLine(m.Model):
         return f'{self.product.name}, {self.quantity} * {self.purchase_price} = {self.line_total}'
 
     class Meta:
+        ordering = ['product__name', 'quantity']
         verbose_name = _('order line')
         verbose_name_plural = _('order lines')
 
 
 class OrdersHistory(m.Model):
-    id = m.AutoField(primary_key=True)
+    id = m.BigAutoField(primary_key=True)
     user = m.ForeignKey(User, on_delete=m.CASCADE)
     purchase_date = m.DateTimeField(auto_now_add=True, verbose_name=_('purchase date'))
     total = m.DecimalField(default=0, max_digits=11, decimal_places=2, verbose_name=_('total'))
