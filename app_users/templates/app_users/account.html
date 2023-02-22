@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <title>{% trans "Account" %}</title>
 </head>
-<body>
+<body style="margin: auto; width: 90%">
     <p>
         <a href="/" style="margin-left: 300px;">{% trans 'To the main' %}</a>
         <a href="{% url 'cart' %}" style="margin-left: 100px;">{% trans 'Cart' %}</a>
         {% if cart_sum %}
             ({% trans 'Total' %}: {{ cart_sum }} {% trans "rub." %})
         {% endif %}
-        {% if profile.is_superuser %}
+        {% if perms.app_users.view_ordershistory %}
            <a href="{% url 'report' %}" style="margin-left: 100px;">{% trans 'Report' %}</a>
         {% endif %}
     </p>

@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from datetime import date
-from typing import Iterable, Optional
 from services.data_access_objects import OrderDAO
 
 
@@ -23,7 +22,7 @@ class MakeSalesReportService:
         )
 
     @classmethod
-    def execute(cls, start: Optional[date], end: Optional[date]) -> Optional[Iterable[ReportRow]]:
+    def execute(cls, start: date | None, end: date | None) -> tuple[ReportRow] | None:
         """ Возвращает отчет по продажам в интервале дат [start, end] """
 
         orders = OrderDAO.fetch_on_dates(start=start, end=end)
@@ -37,4 +36,4 @@ class MakeSalesReportService:
                 else:
                     report[(line.product.id, line.product.name)] = line.quantity
         report = sorted(report.items(), key=lambda item: item[1], reverse=True)
-        return map(cls._report_to_entity, report)
+        return tuple(map(cls._report_to_entity, report))

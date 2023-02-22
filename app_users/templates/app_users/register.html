@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <title>{% trans "Registration" %}</title>
 </head>
-<body>
+<body style="margin: auto; width: 90%">
+<p>
+    <a href="/" style="margin-left: 300px;">{% trans 'To the main' %}</a>
+</p>
 <h2>{% trans "Registration" %}</h2>
 <form method="post">
     {% csrf_token %}

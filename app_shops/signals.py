@@ -10,7 +10,7 @@ PRODUCTS_SHOPS_KEY = 'products_shops'
 def cache_delete(sender, instance=None, **kwargs):
     """ Сбрасывает кэш при изменении моделей """
 
-    logger.debug(f'Receiving signal from {sender!r} with {instance=!r}')
+    # logger.debug(f'Receiving signal from {sender!r} with {instance=!r}')
     if sender in (Product, Shop):
         cache.delete(PRODUCTS_SHOPS_KEY)
     elif sender == OrdersHistory:

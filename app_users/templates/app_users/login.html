@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <title>{% trans "Login" %}</title>
 </head>
-<body>
+<body style="margin: auto; width: 90%">
+<p>
+    <a href="/" style="margin-left: 300px;">{% trans 'To the main' %}</a>
+</p>
 <h2>{% trans "Entry page" %}</h2>
-<form action="/">
-    <button style="position:absolute; left: 400px; top:20px">{% trans 'To the main' %}</button>
-</form>
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}

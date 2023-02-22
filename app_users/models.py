@@ -36,8 +36,8 @@ class Cart(m.Model):
 
     class Meta:
         ordering = ['user']
-        verbose_name = _('purchase')
-        verbose_name_plural = _('purchases')
+        verbose_name = _('cart')
+        verbose_name_plural = _('carts')
 
 
 class OrderLine(m.Model):
@@ -70,5 +70,4 @@ class OrdersHistory(m.Model):
 
     class Meta:
         ordering = ['-purchase_date']
-        verbose_name = _('order')
-        verbose_name_plural = _('orders')
+        verbose_name = _('orders history')

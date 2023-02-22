@@ -1,4 +1,6 @@
 from datetime import date
+
+from django.contrib.auth.decorators import permission_required
 from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
@@ -24,12 +26,12 @@ def products_view(request: HttpRequest) -> HttpResponse:
         elif 'minus' in request.POST:
             CartDAO.minus(user_id=request.user.id, product_id=int(request.POST['minus']))
         else:
-            logger.warning(f'Unknown action={tuple(request.POST.keys()[-1])!r} !!!')
+            logger.warning(f'Unknown POST key is send: {tuple(request.POST.keys()[-1])!r} !')
 
     cart = CartDAO.fetch(user_id=request.user.id, threshold_quantity=1)
     cart_products_ids = tuple(cart_line.product.id for cart_line in cart)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
-    # Вечный кэш товаров и магазинов. Сбрасывается по сигналам изменения.
+    # Кэш товаров и магазинов. Сбрасывается по сигналам изменения.
     products = cache.get(PRODUCTS_SHOPS_KEY)
     if products is None:
         products = ProductDAO.fetch_remains()
@@ -44,11 +46,10 @@ def products_view(request: HttpRequest) -> HttpResponse:
                                                             'page_obj': page_obj})
 
 
+@permission_required(perm='app_users.view_ordershistory', raise_exception=True)
 def report_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы отображения отчёта продаж """
 
-    if request.user.username != 'admin':
-        raise PermissionDenied
     start_date, end_date = None, None
     message = _('Selected all dates.')
     if request.method == 'POST':

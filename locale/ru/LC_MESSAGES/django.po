@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 08:43+0000\n"
+"POT-Creation-Date: 2023-02-21 14:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,7 +52,7 @@ msgstr "цена"
 msgid "remaining products"
 msgstr "оставшиеся товары"
 
-#: app_shops/models.py:43 app_users/models.py:28 app_users/models.py:46
+#: app_shops/models.py:43 app_users/models.py:27 app_users/models.py:44
 msgid "product"
 msgstr "товар"
 
@@ -110,12 +110,12 @@ msgstr "руб."
 
 #: app_shops/templates/app_shops/products_list.html:40
 #: app_users/templates/app_users/login.html:6
-#: app_users/templates/app_users/login.html:16
+#: app_users/templates/app_users/login.html:19
 msgid "Login"
 msgstr "Войти"
 
 #: app_shops/templates/app_shops/products_list.html:41
-#: app_users/templates/app_users/register.html:13
+#: app_users/templates/app_users/register.html:16
 msgid "Register"
 msgstr "Зарегистрироваться"
 
@@ -147,8 +147,10 @@ msgstr "Отчёт"
 #: app_shops/templates/app_shops/report.html:11
 #: app_users/templates/app_users/account.html:10
 #: app_users/templates/app_users/cart.html:13
-#: app_users/templates/app_users/login.html:11
-#: app_users/templates/app_users/replenish.html:11
+#: app_users/templates/app_users/login.html:10
+#: app_users/templates/app_users/login.html:14
+#: app_users/templates/app_users/register.html:10
+#: app_users/templates/app_users/replenish.html:10
 msgid "To the main"
 msgstr "На главную"
 
@@ -172,17 +174,21 @@ msgstr "Название"
 msgid "Quantity"
 msgstr "Количество"
 
-#: app_shops/views.py:46
+#: app_shops/views.py:56
 msgid "Selected all dates."
 msgstr "Выбраны все даты."
 
-#: app_shops/views.py:56
+#: app_shops/views.py:65
 msgid "Selected dates: "
 msgstr "Выбранные даты: "
 
-#: app_shops/views.py:61
+#: app_shops/views.py:70
 msgid "No purchases"
 msgstr "Нет покупок"
+
+#: app_users/admin.py:24 app_users/models.py:22
+msgid "profiles"
+msgstr "профили"
 
 #: app_users/forms.py:8 app_users/templates/app_users/account.html:20
 msgid "User name"
@@ -232,51 +238,47 @@ msgstr "город"
 msgid "profile"
 msgstr "профиль"
 
-#: app_users/models.py:22
-msgid "profiles"
-msgstr "профили"
-
-#: app_users/models.py:29 app_users/models.py:48
+#: app_users/models.py:28 app_users/models.py:46
 msgid "quantity"
 msgstr "количество"
 
+#: app_users/models.py:39
+msgid "cart"
+msgstr "корзина"
+
 #: app_users/models.py:40
-msgid "purchase"
-msgstr "покупка"
+msgid "carts"
+msgstr "корзины"
 
-#: app_users/models.py:41
-msgid "purchases"
-msgstr "покупки"
-
-#: app_users/models.py:47
+#: app_users/models.py:45
 #, fuzzy
 #| msgid "purchase date"
 msgid "purchase price"
 msgstr "дата покупки"
 
-#: app_users/models.py:58 app_users/models.py:67
+#: app_users/models.py:57 app_users/models.py:66
 msgid "order line"
 msgstr "строка заказа"
 
-#: app_users/models.py:59
+#: app_users/models.py:58
 msgid "order lines"
 msgstr "строки заказа"
 
-#: app_users/models.py:65
+#: app_users/models.py:64
 msgid "purchase date"
 msgstr "дата покупки"
 
-#: app_users/models.py:66
+#: app_users/models.py:65
 msgid "total"
 msgstr "итог"
 
-#: app_users/models.py:70 app_users/models.py:74
+#: app_users/models.py:69
 msgid "order"
 msgstr "заказ"
 
-#: app_users/models.py:75
-msgid "orders"
-msgstr "заказы"
+#: app_users/models.py:73
+msgid "orders history"
+msgstr "история заказов"
 
 #: app_users/templates/app_users/account.html:6
 msgid "Account"
@@ -337,40 +339,36 @@ msgstr "Оплатить"
 msgid "Cart is empty"
 msgstr "Корзина пуста"
 
-#: app_users/templates/app_users/login.html:9
+#: app_users/templates/app_users/login.html:12
 msgid "Entry page"
 msgstr "Страница входа"
 
 #: app_users/templates/app_users/register.html:6
-#: app_users/templates/app_users/register.html:9
+#: app_users/templates/app_users/register.html:12
 msgid "Registration"
 msgstr "Регистрация"
 
-#: app_users/templates/app_users/replenish.html:9
+#: app_users/templates/app_users/replenish.html:12
 msgid "Replenishment page"
 msgstr "Страница пополнения"
 
-#: app_users/views.py:26
-msgid "Admin, you need to login through /admin/"
-msgstr "Админ, сюда не ходи. Тебе в /admin/"
-
-#: app_users/views.py:28
-msgid "Error! User is not active."
-msgstr "Ошибка! Пользователь не активен."
-
-#: app_users/views.py:34
+#: app_users/views.py:27
 msgid "Error! Check the spelling of the username and password."
 msgstr "Ошибка! Проверьте корректность написания пароля и логина."
 
-#: services/payment_service.py:22
+#: app_users/views.py:31
+msgid "Error! User is not active."
+msgstr "Ошибка! Пользователь не активен."
+
+#: services/payment_service.py:20
 msgid "Insufficient funds"
 msgstr "Недостаточно средств"
 
-#: services/payment_service.py:38
+#: services/payment_service.py:36
 msgid "Payment successful"
 msgstr "Оплата прошла успешно"
 
-#: services/payment_service.py:41
+#: services/payment_service.py:39
 msgid "Congratulations! Your status has been changed"
 msgstr "Поздравляю! Ваш статус обновлён"
 
@@ -1607,6 +1605,18 @@ msgstr ""
 msgid "Connect, get help, or contribute"
 msgstr ""
 
+#~ msgid "orders"
+#~ msgstr "заказы"
+
+#~ msgid "Admin, you need to login through /admin/"
+#~ msgstr "Админ, сюда не ходи. Тебе в /admin/"
+
+#~ msgid "purchase"
+#~ msgstr "покупка"
+
+#~ msgid "purchases"
+#~ msgstr "покупки"
+
 #~ msgid "From"
 #~ msgstr "От"
 
@@ -1618,9 +1628,6 @@ msgstr ""
 
 #~ msgid "line total"
 #~ msgstr "итог строки"
-
-#~ msgid "orders history"
-#~ msgstr "история заказов"
 
 #~ msgid "ORDERS"
 #~ msgstr "ЗАКАЗЫ"

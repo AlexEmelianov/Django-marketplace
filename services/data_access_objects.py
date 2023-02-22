@@ -1,10 +1,9 @@
 from decimal import Decimal
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, timedelta
 from typing import Iterable, Optional
 from django.db.models import F, Sum
 from django.db.models.signals import post_save
-
 from app_shops.models import Shop, Product
 from app_users.models import Cart, Profile, OrdersHistory, OrderLine
 
@@ -246,6 +245,7 @@ class OrderDAO:
                                                                   quantity=cart_line.quantity)
             order_lines.append(order_line)
         order.order_lines.add(*order_lines)
+        order.save()
 
     @classmethod
     def get_total(cls, user_id: int) -> float:
@@ -273,5 +273,5 @@ class OrderDAO:
         if start is not None:
             if start > end:
                 start, end = end, start
-            orders = orders.filter(purchase_date__gte=start, purchase_date__lte=end)
+            orders = orders.filter(purchase_date__range=(start, end + timedelta(days=1)))
         return tuple(map(cls._orm_to_entity, orders))
