@@ -1,12 +1,10 @@
 from datetime import date
-
 from django.contrib.auth.decorators import permission_required
 from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
 from django.utils.formats import date_format
 from django.utils.translation import gettext as _
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
 from services.make_sales_report_service import MakeSalesReportService
 from services.data_access_objects import CartDAO, ProductDAO
@@ -20,15 +18,22 @@ logger = logging.getLogger(__name__)
 def products_view(request: HttpRequest) -> HttpResponse:
     """ Представление главной страницы со списком товаров """
 
+    if request.user.is_authenticated:
+        cart_id = f'{request.user.id}'
+    elif request.session.session_key is None:
+        request.session.create()
+        cart_id = request.session.setdefault('cart_id', request.session.session_key)
+    else:
+        cart_id = request.session.setdefault('cart_id', request.session.session_key)
+
     if request.method == 'POST':
         if 'plus' in request.POST:
-            CartDAO.plus(user_id=request.user.id, product_id=int(request.POST['plus']))
+            CartDAO.plus(cart_id=cart_id, product_id=int(request.POST['plus']))
         elif 'minus' in request.POST:
-            CartDAO.minus(user_id=request.user.id, product_id=int(request.POST['minus']))
+            CartDAO.minus(cart_id=cart_id, product_id=int(request.POST['minus']))
         else:
             logger.warning(f'Unknown POST key is send: {tuple(request.POST.keys()[-1])!r} !')
-
-    cart = CartDAO.fetch(user_id=request.user.id, threshold_quantity=1)
+    cart = CartDAO.fetch(cart_id=cart_id, threshold_quantity=1)
     cart_products_ids = tuple(cart_line.product.id for cart_line in cart)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
     # Кэш товаров и магазинов. Сбрасывается по сигналам изменения.

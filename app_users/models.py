@@ -23,7 +23,7 @@ class Profile(m.Model):
 
 
 class Cart(m.Model):
-    user = m.ForeignKey(User, on_delete=m.CASCADE)
+    cart_id = m.CharField(max_length=40, unique=True)
     product = m.ForeignKey(Product, on_delete=m.DO_NOTHING, verbose_name=_('product'))
     quantity = m.PositiveSmallIntegerField(default=1, verbose_name=_('quantity'))
 
@@ -35,7 +35,7 @@ class Cart(m.Model):
         return f'{self.product.name}, {self.quantity} * {self.product.price} = {self.line_total}'
 
     class Meta:
-        ordering = ['user']
+        ordering = ['cart_id']
         verbose_name = _('cart')
         verbose_name_plural = _('carts')
 

@@ -372,6 +372,10 @@ msgstr "Оплата прошла успешно"
 msgid "Congratulations! Your status has been changed"
 msgstr "Поздравляю! Ваш статус обновлён"
 
+#: services/payment_service.py:16
+msgid "Put something in the cart first!"
+msgstr "Сначала положите что-нибудь в корзину!"
+
 #: venv/lib/python3.10/site-packages/django/contrib/messages/apps.py:15
 msgid "Messages"
 msgstr "Сообщения"
@@ -1631,9 +1635,6 @@ msgstr ""
 
 #~ msgid "ORDERS"
 #~ msgstr "ЗАКАЗЫ"
-
-#~ msgid "Put something in the cart first!"
-#~ msgstr "Сначала положите что-нибудь в корзину!"
 
 #~ msgid "Price"
 #~ msgstr "Цена"

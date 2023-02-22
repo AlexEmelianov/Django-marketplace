@@ -7,13 +7,13 @@ logger = logging.getLogger(__name__)
 
 
 class PaymentService:
-    """ Сервис оплаты заказа """
+    """ Сервис оформления заказа """
 
     @classmethod
     def execute(cls, user_id: int) -> str:
-        cart = CartDAO.fetch(user_id=user_id, threshold_quantity=1)
+        cart = CartDAO.fetch(cart_id=f'{user_id}', threshold_quantity=1)
         if not cart:
-            return ''
+            return _('Put something in the cart first!')
         cart_sum = sum(cart_line.line_total for cart_line in cart)  # Сумма корзины
         profile = ProfileDAO.fetch_one(user_id=user_id)
         if profile.balance < cart_sum:
@@ -22,7 +22,7 @@ class PaymentService:
             profile.balance -= cart_sum  # Уменьшаем баланс
             ProductDAO.minus_remains(cart=cart)  # Уменьшаем остаток товара на складе
             OrderDAO.create(user_id=user_id, total=cart_sum, cart=cart)  # Создаем историю заказа
-            CartDAO.delete(user_id=user_id)  # Удаляем корзину
+            CartDAO.delete(cart_id=f'{user_id}')  # Удаляем корзину
             total = OrderDAO.get_total(user_id=user_id)  # Получаем сумму  всех заказов
             prev_status = profile.status
             if total < 1e3:             # Проверяем сумму заказов и меняем статус

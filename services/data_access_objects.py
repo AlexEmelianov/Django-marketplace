@@ -61,8 +61,7 @@ class OrderEntity:
 
 @dataclass
 class CartEntity:
-    id: int
-    user_id: int
+    cart_id: str
     product: ProductEntity
     line_total: Decimal
     quantity: int
@@ -79,7 +78,7 @@ class ProfileDAO:
             status_choices=profile_orm.STATUS_CHOICES,
             balance=profile_orm.balance,
             city=profile_orm.city,
-            username=profile_orm.user.username,
+            username=profile_orm.user.get_username(),
             first_name=profile_orm.user.first_name,
             last_name=profile_orm.user.last_name,
             email=profile_orm.user.email,
@@ -162,48 +161,62 @@ class CartDAO:
     @classmethod
     def _orm_to_entity(cls, cart_orm: Cart) -> CartEntity:
         return CartEntity(
-            id=cart_orm.id,
-            user_id=cart_orm.user_id,
+            cart_id=cart_orm.cart_id,
             product=ProductDAO.orm_to_entity(cart_orm.product),
             line_total=cart_orm.line_total,
             quantity=cart_orm.quantity,
         )
 
     @classmethod
-    def fetch(cls, user_id: int, threshold_quantity: int) -> tuple[CartEntity]:
+    def merge(cls, cart_id_anonym: str, cart_id_user: str):
+        """ Объединяет две корзины: анонимного и авторизованного пользователя """
+
+        cart_to_update = []
+        for cart_anonym in Cart.objects.filter(cart_id=cart_id_anonym):
+            cart_user, created = Cart.objects.get_or_create(cart_id=cart_id_user, product_id=cart_anonym.product_id)
+            if not created:
+                cart_user.quantity += cart_anonym.quantity
+            else:
+                cart_user.quantity = cart_anonym.quantity
+            cart_to_update.append(cart_user)
+        Cart.objects.bulk_update(cart_to_update, ['quantity'])
+        Cart.objects.filter(cart_id=cart_id_anonym).delete()
+
+    @classmethod
+    def fetch(cls, cart_id: str, threshold_quantity: int) -> tuple[CartEntity]:
         """ Возвращает перечень строк корзины """
 
         cart = Cart.objects.select_related('product', 'product__shop')\
-                           .filter(user_id=user_id, quantity__gte=threshold_quantity)
+                           .filter(cart_id=cart_id, quantity__gte=threshold_quantity)
         return tuple(map(cls._orm_to_entity, cart))
 
     @classmethod
-    def plus(cls, user_id: int, product_id: int) -> None:
+    def plus(cls, cart_id: str, product_id: int) -> None:
         """ Увеличивает на 1 количество товара в корзине, если его достаточно на складе """
 
         cart_line, created = Cart.objects.select_related('product')\
-                                         .get_or_create(user_id=user_id, product_id=product_id)
+                                         .get_or_create(cart_id=cart_id, product_id=product_id)
         if not created and cart_line.quantity < cart_line.product.remains:
             cart_line.quantity += 1
             cart_line.save()
 
     @classmethod
-    def minus(cls, user_id: int, product_id: int) -> None:
+    def minus(cls, cart_id: str, product_id: int) -> None:
         """ Уменьшает на 1 количество товара в корзине """
 
-        cart_line = Cart.objects.only('quantity').get(user_id=user_id, product_id=product_id)
+        cart_line = Cart.objects.only('quantity').get(cart_id=cart_id, product_id=product_id)
         if cart_line.quantity > 0:
             cart_line.quantity -= 1
             cart_line.save()
 
     @classmethod
-    def delete(cls, user_id: int, product_id: int = None) -> None:
+    def delete(cls, cart_id: str, product_id: int = None) -> None:
         """ Удаляет товар из корзины или всю корзину пользователя """
 
         if product_id is None:
-            Cart.objects.filter(user_id=user_id).delete()
+            Cart.objects.filter(cart_id=cart_id).delete()
         else:
-            Cart.objects.filter(user_id=user_id, product_id=product_id).delete()
+            Cart.objects.filter(cart_id=cart_id, product_id=product_id).delete()
 
 
 class OrderLineDAO:

@@ -26,21 +26,19 @@
         <input type="submit" value="OK">
     </form>
 </header>
+<p>
 {% if request.user.is_authenticated %}
-    <p>
-        {% trans 'Welcome' %}, {{ request.user.username }} (<a href="{% url 'account' %}">{% trans 'Your profile' %}</a>)
-        <a href="{% url 'logout' %}" style="margin-left: 100px">{% trans 'Logout' %}</a>
-        <a href="{% url 'cart' %}" style="margin-left: 100px">{% trans 'Cart' %}</a>
-        {% if cart_sum %}
-            ({% trans 'Total' %}: {{ cart_sum }} {% trans "rub." %})
-        {% endif %}
-    </p>
+    {% trans 'Welcome' %}, {{ request.user.username }} (<a href="{% url 'account' %}">{% trans 'Your profile' %}</a>)
+    <a href="{% url 'logout' %}" style="margin-left: 100px">{% trans 'Logout' %}</a>
 {% else %}
-    <p>
-        <a href="{% url 'login' %}" style="margin-left: 20px">{% trans 'Login' %}</a>
-        <a href="{% url 'register' %}" style="margin-left: 180px">{% trans 'Register' %}</a>
-    </p>
+    <a href="{% url 'login' %}" style="margin-left: 20px">{% trans 'Login' %}</a>
+    <a href="{% url 'register' %}" style="margin-left: 180px">{% trans 'Register' %}</a>
 {% endif %}
+<a href="{% url 'cart' %}" style="margin-left: 100px">{% trans 'Cart' %}</a>
+{% if cart_sum %}
+    ({% trans 'Total' %}: {{ cart_sum }} {% trans "rub." %})
+{% endif %}
+</p>
 {% if page_obj %}
 <h2>{% trans 'Products' %}</h2>
 <ul>
@@ -50,29 +48,25 @@
     <div style="position:relative">
         <div class="at_right" style="left:300px">{% trans 'In stock'%}: {{ product.remains }}</div>
         <div class="at_right" style="left:450px">
-        {% if request.user.is_authenticated %}
-            {% if product.id in cart_products_ids %}
-                {% for cart_line in cart %}
-                    {% if cart_line.product.id == product.id %}
-                        <span style="color: RGB(11, 112, 0)">
-                            {{ cart_line.line_total }} {% trans 'rub.' %}, {{ cart_line.quantity }} {% trans 'pcs.' %}
-                        </span>
-                    {% endif %}
-                {% endfor %}
-                <form action="?page={{ page_obj.number }}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="minus" value="{{ product.id }}"> - </button>
-                    <button type="submit" name="plus" value="{{ product.id }}"> + </button>
-                </form>
-            {% else %}
-            {{ product.price }} {% trans 'rub.' %}
+        {% if product.id in cart_products_ids %}
+            {% for cart_line in cart %}
+                {% if cart_line.product.id == product.id %}
+                    <span style="color: RGB(11, 112, 0)">
+                        {{ cart_line.line_total }} {% trans 'rub.' %}, {{ cart_line.quantity }} {% trans 'pcs.' %}
+                    </span>
+                {% endif %}
+            {% endfor %}
             <form action="?page={{ page_obj.number }}" method="post">
                 {% csrf_token %}
-                <button type="submit" name="plus" value="{{ product.id }}">{% trans 'Add to cart' %}</button>
+                <button type="submit" name="minus" value="{{ product.id }}"> - </button>
+                <button type="submit" name="plus" value="{{ product.id }}"> + </button>
             </form>
-            {% endif %}
         {% else %}
-            {{ product.price }} {% trans 'rub.' %}
+        {{ product.price }} {% trans 'rub.' %}
+        <form action="?page={{ page_obj.number }}" method="post">
+            {% csrf_token %}
+            <button type="submit" name="plus" value="{{ product.id }}">{% trans 'Add to cart' %}</button>
+        </form>
         {% endif %}
         </div>
     </div>

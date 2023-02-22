@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from services.payment_service import CartDAO, PaymentService
 from services.data_access_objects import OrderDAO, ProfileDAO
@@ -31,6 +32,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
                 auth_form.add_error('__all__', _('Error! User is not active.'))
             else:
                 login(request, user)
+                CartDAO.merge(cart_id_anonym=request.session.get('cart_id', '0'), cart_id_user=f'{user.id}')
                 logger.debug(f'Authentification of the user {username!r}')
                 return redirect('/')
     else:
@@ -53,6 +55,7 @@ def register_view(request: HttpRequest) -> HttpResponse:
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+            CartDAO.merge(cart_id_anonym=request.session.get('cart_id', '0'), cart_id_user=f'{user.id}')
             return redirect('/')
     else:
         form = RegisterForm()
@@ -77,7 +80,8 @@ def account_view(request: HttpRequest) -> HttpResponse:
         orders = OrderDAO.fetch(user_id=profile.id)
         cache.set(f'orders_{profile.username}', orders, timeout=None)
     total = sum(order.total for order in orders)
-    cart = CartDAO.fetch(user_id=profile.id, threshold_quantity=1)
+
+    cart = CartDAO.fetch(cart_id=f'{request.user.id}', threshold_quantity=1)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
     return render(request, 'app_users/account.html', {'form': form,
                                                       'profile': profile,
@@ -100,24 +104,29 @@ def replenish_view(request: HttpRequest) -> HttpResponse:
     return render(request, 'app_users/replenish.html', {'form': form})
 
 
-@login_required
 def cart_view(request: HttpRequest) -> HttpResponse:
     """ Представление страницы корзины """
 
+    if request.user.is_authenticated:
+        cart_id = f'{request.user.id}'
+    elif request.session.session_key is None:
+        request.session.create()
+        cart_id = request.session.setdefault('cart_id', request.session.session_key)
+    else:
+        cart_id = request.session.setdefault('cart_id', request.session.session_key)
     message = None
     if request.method == 'POST':
         if 'plus' in request.POST:
-            CartDAO.plus(user_id=request.user.id, product_id=int(request.POST['plus']))
+            CartDAO.plus(cart_id=cart_id, product_id=int(request.POST['plus']))
         elif 'minus' in request.POST:
-            CartDAO.minus(user_id=request.user.id, product_id=int(request.POST['minus']))
+            CartDAO.minus(cart_id=cart_id, product_id=int(request.POST['minus']))
         elif 'delete' in request.POST:
-            CartDAO.delete(user_id=request.user.id, product_id=int(request.POST['delete']))
-        elif 'to_pay' in request.POST:
-            message = PaymentService.execute(request.user.id)
+            CartDAO.delete(cart_id=cart_id, product_id=int(request.POST['delete']))
+        elif 'to_pay' in request.POST and request.user.is_authenticated:
+            message = PaymentService.execute(user_id=cart_id)
         else:
-            logger.warning(f'Unknown POST key is send: {tuple(request.POST.keys()[-1])!r} !')
-
-    cart = CartDAO.fetch(user_id=request.user.id, threshold_quantity=0)
+            return redirect(reverse('login'))
+    cart = CartDAO.fetch(cart_id=cart_id, threshold_quantity=0)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
     return render(request, 'app_users/cart.html', {'cart': cart,
                                                    'cart_sum': cart_sum,
