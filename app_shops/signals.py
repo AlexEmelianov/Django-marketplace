@@ -1,17 +1,9 @@
 from django.core.cache import cache
-from app_users.models import OrdersHistory
-from .models import Product, Shop
-import logging
 
-logger = logging.getLogger(__name__)
-PRODUCTS_SHOPS_KEY = 'products_shops'
+PRODUCTS_KEY = 'products'
 
 
-def cache_delete(sender, instance=None, **kwargs):
-    """ Сбрасывает кэш при изменении моделей """
+def products_cache_delete(sender, instance=None, **kwargs):
+    """ Сбрасывает кэш при изменении товаров и магазинов (Product и Shop) """
 
-    # logger.debug(f'Receiving signal from {sender!r} with {instance=!r}')
-    if sender in (Product, Shop):
-        cache.delete(PRODUCTS_SHOPS_KEY)
-    elif sender == OrdersHistory:
-        cache.delete(f'orders_{instance.user.username}')
+    cache.delete(PRODUCTS_KEY)

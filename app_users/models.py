@@ -23,7 +23,7 @@ class Profile(m.Model):
 
 
 class Cart(m.Model):
-    cart_id = m.CharField(max_length=40, unique=True)
+    cart_id = m.CharField(max_length=40)
     product = m.ForeignKey(Product, on_delete=m.DO_NOTHING, verbose_name=_('product'))
     quantity = m.PositiveSmallIntegerField(default=1, verbose_name=_('quantity'))
 

@@ -9,7 +9,7 @@ from django.shortcuts import render
 from services.make_sales_report_service import MakeSalesReportService
 from services.data_access_objects import CartDAO, ProductDAO
 from .forms import ReportDatesForm
-from .signals import PRODUCTS_SHOPS_KEY
+from .signals import PRODUCTS_KEY
 import logging
 
 logger = logging.getLogger(__name__)
@@ -37,10 +37,10 @@ def products_view(request: HttpRequest) -> HttpResponse:
     cart_products_ids = tuple(cart_line.product.id for cart_line in cart)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
     # Кэш товаров и магазинов. Сбрасывается по сигналам изменения.
-    products = cache.get(PRODUCTS_SHOPS_KEY)
+    products = cache.get(PRODUCTS_KEY)
     if products is None:
         products = ProductDAO.fetch_remains()
-        cache.set(PRODUCTS_SHOPS_KEY, products, timeout=None)
+        cache.set(PRODUCTS_KEY, products, timeout=None)
 
     paginator = Paginator(products, 8)
     page_number = request.GET.get('page')

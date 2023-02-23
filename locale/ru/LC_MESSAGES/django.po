@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-21 14:12+0300\n"
+"POT-Creation-Date: 2023-02-23 12:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -61,7 +61,7 @@ msgid "products"
 msgstr "товары"
 
 #: app_shops/templates/app_shops/products_list.html:6
-#: app_shops/templates/app_shops/products_list.html:45
+#: app_shops/templates/app_shops/products_list.html:43
 #, fuzzy
 #| msgid "products"
 msgid "Products"
@@ -72,7 +72,7 @@ msgid "Welcome"
 msgstr "Добро пожаловать"
 
 #: app_shops/templates/app_shops/products_list.html:31
-#: app_users/templates/app_users/cart.html:14
+#: app_users/templates/app_users/cart.html:15
 msgid "Your profile"
 msgstr "Ваш профиль"
 
@@ -80,66 +80,65 @@ msgstr "Ваш профиль"
 msgid "Logout"
 msgstr "Выйти"
 
-#: app_shops/templates/app_shops/products_list.html:33
+#: app_shops/templates/app_shops/products_list.html:34
+#: app_users/templates/app_users/login.html:6
+#: app_users/templates/app_users/login.html:16
+msgid "Login"
+msgstr "Войти"
+
+#: app_shops/templates/app_shops/products_list.html:35
+#: app_users/templates/app_users/register.html:16
+msgid "Register"
+msgstr "Зарегистрироваться"
+
+#: app_shops/templates/app_shops/products_list.html:37
 #: app_users/templates/app_users/account.html:11
 #: app_users/templates/app_users/cart.html:6
-#: app_users/templates/app_users/cart.html:16
+#: app_users/templates/app_users/cart.html:18
 msgid "Cart"
 msgstr "Корзина"
 
-#: app_shops/templates/app_shops/products_list.html:35
+#: app_shops/templates/app_shops/products_list.html:39
 #: app_users/templates/app_users/account.html:13
 #: app_users/templates/app_users/account.html:50
-#: app_users/templates/app_users/cart.html:40
+#: app_users/templates/app_users/cart.html:42
 msgid "Total"
 msgstr "Итог"
 
-#: app_shops/templates/app_shops/products_list.html:35
-#: app_shops/templates/app_shops/products_list.html:58
-#: app_shops/templates/app_shops/products_list.html:68
-#: app_shops/templates/app_shops/products_list.html:75 app_users/forms.py:31
+#: app_shops/templates/app_shops/products_list.html:39
+#: app_shops/templates/app_shops/products_list.html:55
+#: app_shops/templates/app_shops/products_list.html:65 app_users/forms.py:31
 #: app_users/templates/app_users/account.html:13
 #: app_users/templates/app_users/account.html:23
 #: app_users/templates/app_users/account.html:26
 #: app_users/templates/app_users/account.html:45
 #: app_users/templates/app_users/account.html:50
-#: app_users/templates/app_users/cart.html:25
-#: app_users/templates/app_users/cart.html:40
+#: app_users/templates/app_users/cart.html:27
+#: app_users/templates/app_users/cart.html:42
 msgid "rub."
 msgstr "руб."
 
-#: app_shops/templates/app_shops/products_list.html:40
-#: app_users/templates/app_users/login.html:6
-#: app_users/templates/app_users/login.html:19
-msgid "Login"
-msgstr "Войти"
-
-#: app_shops/templates/app_shops/products_list.html:41
-#: app_users/templates/app_users/register.html:16
-msgid "Register"
-msgstr "Зарегистрироваться"
-
-#: app_shops/templates/app_shops/products_list.html:51
-#: app_users/templates/app_users/cart.html:23
+#: app_shops/templates/app_shops/products_list.html:49
+#: app_users/templates/app_users/cart.html:25
 msgid "In stock"
 msgstr "На складе"
 
-#: app_shops/templates/app_shops/products_list.html:58
+#: app_shops/templates/app_shops/products_list.html:55
 #: app_users/templates/app_users/account.html:44
-#: app_users/templates/app_users/cart.html:25
+#: app_users/templates/app_users/cart.html:27
 msgid "pcs."
 msgstr "шт."
 
-#: app_shops/templates/app_shops/products_list.html:71
+#: app_shops/templates/app_shops/products_list.html:68
 msgid "Add to cart"
 msgstr "Добавить"
 
-#: app_shops/templates/app_shops/products_list.html:98
+#: app_shops/templates/app_shops/products_list.html:92
 msgid "No products"
 msgstr "Нет товаров"
 
 #: app_shops/templates/app_shops/report.html:7
-#: app_shops/templates/app_shops/report.html:10
+#: app_shops/templates/app_shops/report.html:13
 #: app_users/templates/app_users/account.html:16
 msgid "Report"
 msgstr "Отчёт"
@@ -148,41 +147,40 @@ msgstr "Отчёт"
 #: app_users/templates/app_users/account.html:10
 #: app_users/templates/app_users/cart.html:13
 #: app_users/templates/app_users/login.html:10
-#: app_users/templates/app_users/login.html:14
 #: app_users/templates/app_users/register.html:10
 #: app_users/templates/app_users/replenish.html:10
 msgid "To the main"
 msgstr "На главную"
 
-#: app_shops/templates/app_shops/report.html:12
+#: app_shops/templates/app_shops/report.html:14
 msgid "Best-selling products"
 msgstr "Наиболее продаваемые товары"
 
-#: app_shops/templates/app_shops/report.html:13
+#: app_shops/templates/app_shops/report.html:15
 msgid "Choose dates range"
 msgstr "Выберите интервал дат"
 
-#: app_shops/templates/app_shops/report.html:19
+#: app_shops/templates/app_shops/report.html:21
 msgid "Apply"
 msgstr "Применить"
 
-#: app_shops/templates/app_shops/report.html:29
+#: app_shops/templates/app_shops/report.html:31
 msgid "Name"
 msgstr "Название"
 
-#: app_shops/templates/app_shops/report.html:30
+#: app_shops/templates/app_shops/report.html:32
 msgid "Quantity"
 msgstr "Количество"
 
-#: app_shops/views.py:56
+#: app_shops/views.py:59
 msgid "Selected all dates."
 msgstr "Выбраны все даты."
 
-#: app_shops/views.py:65
+#: app_shops/views.py:68
 msgid "Selected dates: "
 msgstr "Выбранные даты: "
 
-#: app_shops/views.py:70
+#: app_shops/views.py:73
 msgid "No purchases"
 msgstr "Нет покупок"
 
@@ -326,16 +324,16 @@ msgstr "Дата покупки"
 msgid "There is nothing yet"
 msgstr "Пока ничего нет"
 
-#: app_users/templates/app_users/cart.html:30
+#: app_users/templates/app_users/cart.html:32
 #: venv/lib/python3.10/site-packages/django/forms/formsets.py:496
 msgid "Delete"
 msgstr "Удалить"
 
-#: app_users/templates/app_users/cart.html:45
+#: app_users/templates/app_users/cart.html:47
 msgid "To pay"
 msgstr "Оплатить"
 
-#: app_users/templates/app_users/cart.html:51
+#: app_users/templates/app_users/cart.html:53
 msgid "Cart is empty"
 msgstr "Корзина пуста"
 
@@ -352,13 +350,17 @@ msgstr "Регистрация"
 msgid "Replenishment page"
 msgstr "Страница пополнения"
 
-#: app_users/views.py:27
+#: app_users/views.py:28
 msgid "Error! Check the spelling of the username and password."
 msgstr "Ошибка! Проверьте корректность написания пароля и логина."
 
-#: app_users/views.py:31
+#: app_users/views.py:32
 msgid "Error! User is not active."
 msgstr "Ошибка! Пользователь не активен."
+
+#: services/payment_service.py:16
+msgid "Put something in the cart first!"
+msgstr "Сначала положите что-нибудь в корзину!"
 
 #: services/payment_service.py:20
 msgid "Insufficient funds"
@@ -371,10 +373,6 @@ msgstr "Оплата прошла успешно"
 #: services/payment_service.py:39
 msgid "Congratulations! Your status has been changed"
 msgstr "Поздравляю! Ваш статус обновлён"
-
-#: services/payment_service.py:16
-msgid "Put something in the cart first!"
-msgstr "Сначала положите что-нибудь в корзину!"
 
 #: venv/lib/python3.10/site-packages/django/contrib/messages/apps.py:15
 msgid "Messages"

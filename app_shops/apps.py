@@ -11,5 +11,5 @@ class AppShopsConfig(AppConfig):
         from .models import Product, Shop
 
         for model in Product, Shop:
-            post_save.connect(signals.cache_delete, sender=model, dispatch_uid=f'{model}_post_save')
-            post_delete.connect(signals.cache_delete, sender=model, dispatch_uid=f'{model}_post_delete')
+            post_save.connect(signals.products_cache_delete, sender=model, dispatch_uid=f'{model}_post_save')
+            post_delete.connect(signals.products_cache_delete, sender=model, dispatch_uid=f'{model}_post_delete')
