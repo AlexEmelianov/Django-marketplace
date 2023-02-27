@@ -80,8 +80,7 @@ def account_view(request: HttpRequest) -> HttpResponse:
         orders = OrderDAO.fetch(user_id=profile.id)
         cache.set(f'orders_{profile.username}', orders, timeout=None)
     total = sum(order.total for order in orders)
-
-    cart = CartDAO.fetch(cart_id=f'{request.user.id}', threshold_quantity=1)
+    cart = CartDAO.fetch(cart_id=f'{profile.id}', threshold_quantity=1)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
     return render(request, 'app_users/account.html', {'form': form,
                                                       'profile': profile,
@@ -98,7 +97,7 @@ def replenish_view(request: HttpRequest) -> HttpResponse:
         form = ReplenishmentForm(request.POST)
         if form.is_valid():
             ReplenishmentService.execute(user_id=request.user.id, amount=form.cleaned_data['amount'])
-            return redirect('..')
+            return redirect(reverse('account'))
     else:
         form = ReplenishmentForm()
     return render(request, 'app_users/replenish.html', {'form': form})

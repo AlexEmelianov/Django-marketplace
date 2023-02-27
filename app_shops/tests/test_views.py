@@ -1,12 +1,11 @@
 from datetime import timedelta
-from django.contrib.auth.models import User, Permission
 from django.urls import reverse
 from django.utils import timezone
+from app_users.models import OrdersHistory
+from app_users.tests.test_views import MyTestCase, NUMBER_OF_PRODUCTS
 
-from app_users.tests.test_views import MyTestCase, NUMBER_OF_PRODUCTS, PASSWORD
 
-
-class ProductsListTest(MyTestCase):
+class ProductsViewTestCase(MyTestCase):
     def test_products_list_exists_at_desired_location(self):
         response = self.unauthorized_client.get('')
         self.assertEqual(response.status_code, 200)
@@ -22,16 +21,13 @@ class ProductsListTest(MyTestCase):
         self.assertEqual(len(response.context['page_obj']), NUMBER_OF_PRODUCTS)
 
     def test_products_list_post(self):
-        response = self.authorized_client.post(reverse('products_list'), {'plus': 1})
+        response = self.unauthorized_client.post(reverse('products_list'), {'plus': 1})
         self.assertEqual(response.status_code, 200)
-        response = self.authorized_client.post(reverse('products_list'), {'minus': 1})
+        response = self.unauthorized_client.post(reverse('products_list'), {'minus': 1})
         self.assertEqual(response.status_code, 200)
 
 
-class ReportTest(MyTestCase):
-    def setUp(self):
-        self.user.user_permissions.add(Permission.objects.get(codename='view_ordershistory'))
-
+class ReportViewTestCase(MyTestCase):
     def test_report_exists_at_desired_location(self):
         response = self.authorized_client.get('/report/')
         self.assertEqual(response.status_code, 200)
@@ -42,6 +38,7 @@ class ReportTest(MyTestCase):
         self.assertTemplateUsed(response, 'app_shops/report.html')
 
     def test_report_rows_number(self):
+        OrdersHistory.objects.all().delete()
         for idx in range(1, NUMBER_OF_PRODUCTS + 1):
             self.authorized_client.post(reverse('cart'), {'plus': idx})
         self.authorized_client.post(reverse('cart'), {'to_pay': ''})
@@ -54,3 +51,8 @@ class ReportTest(MyTestCase):
         response = self.authorized_client.post(reverse('report'), {'start': timezone.now(),
                                                                    'end': timezone.now() - timedelta(days=1)})
         self.assertEqual(response.status_code, 200)
+
+    def test_report_not_authorized(self):
+        self.user.user_permissions.remove(self.permission_for_report)
+        response = self.authorized_client.get(reverse('report'))
+        self.assertEqual(response.status_code, 403)
