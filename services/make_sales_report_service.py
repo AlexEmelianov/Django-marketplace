@@ -11,7 +11,7 @@ class ReportRow:
 
 
 class MakeSalesReportService:
-    """ Сервис создания отчета продаж по самым продаваемым товарам """
+    """ Sales report service """
 
     @classmethod
     def _report_to_entity(cls, report: tuple) -> ReportRow:
@@ -23,7 +23,7 @@ class MakeSalesReportService:
 
     @classmethod
     def execute(cls, start: date | None, end: date | None) -> tuple[ReportRow] | None:
-        """ Возвращает отчет по продажам в интервале дат [start, end] """
+        """ Returns sales report in dates interval [start, end]. """
 
         orders = OrderDAO.fetch_on_dates(start=start, end=end)
         if not orders:

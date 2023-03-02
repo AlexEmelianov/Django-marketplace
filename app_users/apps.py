@@ -7,6 +7,8 @@ class AppUsersConfig(AppConfig):
     name = 'app_users'
 
     def ready(self):
+        """ Binds django signals with handlers. """
+
         from . import signals
         from .models import OrdersHistory
         from django.contrib.sessions.models import Session

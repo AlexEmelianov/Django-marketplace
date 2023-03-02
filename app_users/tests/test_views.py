@@ -8,7 +8,8 @@ import logging
 
 USERNAME = 'test_user'
 PASSWORD = 'qscv0987'
-#  number of products must be less than arg of Paginator in app_shops.views.products_view -> 'Paginator(products, 8)'
+#  NUMBER_OF_PRODUCTS must be less than arg of Paginator
+#  in app_shops.views.products_list_view -> 'Paginator(products, 8)'
 NUMBER_OF_PRODUCTS = 3
 
 

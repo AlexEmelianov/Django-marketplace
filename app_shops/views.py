@@ -15,8 +15,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def products_view(request: HttpRequest) -> HttpResponse:
-    """ Представление главной страницы со списком товаров """
+def products_list_view(request: HttpRequest) -> HttpResponse:
+    """ View of products list. """
 
     if request.user.is_authenticated:
         cart_id = f'{request.user.id}'
@@ -36,8 +36,7 @@ def products_view(request: HttpRequest) -> HttpResponse:
     cart = CartDAO.fetch(cart_id=cart_id, threshold_quantity=1)
     cart_products_ids = tuple(cart_line.product.id for cart_line in cart)
     cart_sum = sum(cart_line.line_total for cart_line in cart)
-    # Кэш товаров и магазинов. Сбрасывается по сигналам изменения.
-    products = cache.get(PRODUCTS_KEY)
+    products = cache.get(PRODUCTS_KEY)  # Cache is cleared by signals
     if products is None:
         products = ProductDAO.fetch_remains()
         cache.set(PRODUCTS_KEY, products, timeout=None)
@@ -53,7 +52,7 @@ def products_view(request: HttpRequest) -> HttpResponse:
 
 @permission_required(perm='app_users.view_ordershistory', raise_exception=True)
 def report_view(request: HttpRequest) -> HttpResponse:
-    """ Представление страницы отображения отчёта продаж """
+    """ View of sales report. """
 
     start_date, end_date = None, None
     message = _('Selected all dates.')
@@ -62,7 +61,7 @@ def report_view(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             start_date = form.cleaned_data.get('start')
             end_date = form.cleaned_data.get('end')
-            # Локализация дат
+            # Dates localization
             start = date_format(date.fromisoformat(f'{start_date}'), format='SHORT_DATE_FORMAT', use_l10n=True)
             end = date_format(date.fromisoformat(f'{end_date}'), format='SHORT_DATE_FORMAT', use_l10n=True)
             message = _('Selected dates: ') + '\n' + start + ' - ' + end

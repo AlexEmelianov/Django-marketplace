@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class ReplenishmentService:
-    """ Сервис пополнения баланса пользователя """
+    """ User balance replenishment service """
 
     @classmethod
     def execute(cls, user_id: int, amount: int) -> None:
@@ -14,4 +14,4 @@ class ReplenishmentService:
         with transaction.atomic():
             profile.balance += amount
             ProfileDAO.update(profile=profile, update_fields=['balance'])
-            logger.info(f'Balanse replenishment of the user {profile.username!r}, {amount=}')
+            logger.info(f'Balance replenishment of the user {profile.username!r}, {amount=}')

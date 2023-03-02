@@ -7,6 +7,8 @@ class AppShopsConfig(AppConfig):
     name = 'app_shops'
 
     def ready(self):
+        """ Binds django signals with handlers. """
+
         from . import signals
         from .models import Product, Shop
 

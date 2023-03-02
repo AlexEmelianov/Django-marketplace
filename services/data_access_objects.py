@@ -68,7 +68,7 @@ class CartEntity:
 
 
 class ProfileDAO:
-    """ Data Access Object для модели Profile """
+    """ Data Access Object of Profile model. """
 
     @classmethod
     def orm_to_entity(cls, profile_orm: Profile) -> ProfileEntity:
@@ -88,13 +88,13 @@ class ProfileDAO:
 
     @classmethod
     def fetch_one(cls, user_id: int) -> ProfileEntity:
-        """ Возвращает профиль пользователя """
+        """ Returns Profile entity. """
 
         return cls.orm_to_entity(Profile.objects.select_related('user').get(user_id=user_id))
 
     @classmethod
     def update(cls, profile: ProfileEntity, update_fields: list) -> None:
-        """ Обновляет значения в БД """
+        """ Updates database. """
 
         profile_orm = Profile.objects.get(user_id=profile.id)
         for field in update_fields:
@@ -109,7 +109,7 @@ class ProfileDAO:
 
 
 class ShopDAO:
-    """ Data Access Object для модели Shop """
+    """ Data Access Object of Shop model. """
 
     @classmethod
     def orm_to_entity(cls, shop_orm: Shop) -> ShopEntity:
@@ -121,7 +121,7 @@ class ShopDAO:
 
 
 class ProductDAO:
-    """ Data Access Object для модели Product """
+    """ Data Access Object of Product model. """
 
     @classmethod
     def orm_to_entity(cls, product_orm: Product) -> ProductEntity:
@@ -137,14 +137,14 @@ class ProductDAO:
 
     @classmethod
     def fetch_remains(cls) -> tuple[ProductEntity]:
-        """ Возвращает перечень товаров, имеющихся на складе """
+        """ Returns tuple of remains products entities. """
 
         products = Product.objects.select_related('shop').filter(remains__gte=1)
         return tuple(map(cls.orm_to_entity, products))
 
     @classmethod
     def minus_remains(cls, cart: tuple[CartEntity]) -> None:
-        """ Уменьшает остаток товара на складе """
+        """ Decreases products remains. """
 
         products = Product.objects.only('remains').filter(id__in=(cart_line.product.id for cart_line in cart))
         for product in products:
@@ -156,7 +156,7 @@ class ProductDAO:
 
 
 class CartDAO:
-    """ Data Access Object для модели Cart """
+    """ Data Access Object of Cart model. """
 
     @classmethod
     def _orm_to_entity(cls, cart_orm: Cart) -> CartEntity:
@@ -169,7 +169,7 @@ class CartDAO:
 
     @classmethod
     def merge(cls, cart_id_anonym: str, cart_id_user: str):
-        """ Объединяет две корзины: анонимного и авторизованного пользователя """
+        """ Merges two carts: anonymous and authorized users. """
 
         cart_to_update = []
         for cart_anonym in Cart.objects.filter(cart_id=cart_id_anonym):
@@ -184,7 +184,7 @@ class CartDAO:
 
     @classmethod
     def fetch(cls, cart_id: str, threshold_quantity: int) -> tuple[CartEntity]:
-        """ Возвращает перечень строк корзины """
+        """ Returns tuple of cart entities. """
 
         cart = Cart.objects.select_related('product', 'product__shop')\
                            .filter(cart_id=cart_id, quantity__gte=threshold_quantity)
@@ -192,7 +192,7 @@ class CartDAO:
 
     @classmethod
     def plus(cls, cart_id: str, product_id: int) -> None:
-        """ Увеличивает на 1 количество товара в корзине, если его достаточно на складе """
+        """ Increases product in the cart if there are enough remains. """
 
         cart_line, created = Cart.objects.select_related('product')\
                                          .get_or_create(cart_id=cart_id, product_id=product_id)
@@ -202,7 +202,7 @@ class CartDAO:
 
     @classmethod
     def minus(cls, cart_id: str, product_id: int) -> None:
-        """ Уменьшает на 1 количество товара в корзине """
+        """ Decreases product in the cart. """
 
         cart_line = Cart.objects.only('quantity').get(cart_id=cart_id, product_id=product_id)
         if cart_line.quantity > 0:
@@ -211,7 +211,7 @@ class CartDAO:
 
     @classmethod
     def delete(cls, cart_id: str, product_id: int = None) -> None:
-        """ Удаляет товар из корзины или всю корзину пользователя """
+        """ Deletes product in the cart or whole cart. """
 
         if product_id is None:
             Cart.objects.filter(cart_id=cart_id).delete()
@@ -220,7 +220,7 @@ class CartDAO:
 
 
 class OrderLineDAO:
-    """ Data Access Object для модели OrderLine """
+    """ Data Access Object of OrderLine model. """
 
     @classmethod
     def orm_to_entity(cls, order_line_orm: OrderLine) -> OrderLineEntity:
@@ -234,7 +234,7 @@ class OrderLineDAO:
 
 
 class OrderDAO:
-    """ Data Access Object для модели Order """
+    """ Data Access Object of Order model. """
 
     @classmethod
     def _orm_to_entity(cls, order_orm: OrdersHistory) -> OrderEntity:
@@ -248,7 +248,7 @@ class OrderDAO:
 
     @classmethod
     def create(cls, user_id: int, total: Decimal, cart: Iterable[CartEntity]) -> None:
-        """ Создает и заполняет заказ """
+        """ Creates and fills order. """
 
         order = OrdersHistory.objects.create(user_id=user_id, total=total)
         order_lines = []
@@ -262,14 +262,14 @@ class OrderDAO:
 
     @classmethod
     def get_total(cls, user_id: int) -> float:
-        """ Возвращает сумму всех заказов пользователя """
+        """ Returns total amount of user orders. """
 
         total = OrdersHistory.objects.only('total').filter(user_id=user_id).aggregate(s=Sum('total'))['s']
         return round(total, 2)
 
     @classmethod
     def fetch(cls, user_id: int) -> tuple[OrderEntity]:
-        """ Возвращает перечень заказов пользователя """
+        """ Returns tuple of user orders entities. """
 
         orders = OrdersHistory.objects.prefetch_related('order_lines', 'order_lines__product',
                                                         'order_lines__product__shop')\
@@ -278,7 +278,7 @@ class OrderDAO:
 
     @classmethod
     def fetch_on_dates(cls, start: Optional[date], end: Optional[date]) -> tuple[OrderEntity]:
-        """ Возвращает перечень заказов всех пользователей в интервале дат [start, end] """
+        """ Returns tuple of users orders entities in dates interval [start, end]. """
 
         orders = OrdersHistory.objects.prefetch_related('order_lines',
                                                         'order_lines__product',

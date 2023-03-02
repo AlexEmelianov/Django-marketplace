@@ -5,11 +5,15 @@ from django.utils.translation import gettext_lazy as _
 
 
 class AuthForm(f.Form):
+    """ Form for login. """
+
     username = f.CharField(label=_('User name'))
     password = f.CharField(widget=f.PasswordInput, label=_('Password'))
 
 
 class RegisterForm(UserCreationForm):
+    """ Form for registration. """
+
     city = f.CharField(max_length=30, required=False, label=_('City'))
 
     class Meta:
@@ -18,6 +22,8 @@ class RegisterForm(UserCreationForm):
 
 
 class NamesEditForm(f.ModelForm):
+    """ Form for account info. """
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
@@ -28,4 +34,6 @@ class NamesEditForm(f.ModelForm):
 
 
 class ReplenishmentForm(f.Form):
+    """ Form for balance replenishment. """
+
     amount = f.IntegerField(min_value=100, max_value=1e7, label=_('Amount'), help_text=_('rub.'))
